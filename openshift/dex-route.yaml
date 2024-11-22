@@ -1,14 +1,19 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: dex
+  labels:
+    app: dex-example
+  name: dex-example
+  namespace: test
 spec:
-  host: spring-dex-test.apps.barp.opencontainer.io
-  path: "/dex"
+  host: dex-test.apps.barp.opencontainer.io
   port:
-    targetPort: 5556-tcp
+    targetPort: port-1
+  tls:
+    insecureEdgeTerminationPolicy: None
+    termination: edge
   to:
     kind: Service
-    name: spring-dex-test
+    name: dex-example
     weight: 100
   wildcardPolicy: None
