@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dex-config
+  namespace: test
+data:
+  dex-config.yaml: |
+    issuer: https://dex-test.apps.barp.opencontainer.io/dex
+
+    oauth2:
+      skipApprovalScreen: true
+
+    storage:
+      type: memory
+
+    web:
+      http: 0.0.0.0:5556
+
+    telemetry:
+      http: 0.0.0.0:5558
+
+    grpc:
+      addr: 0.0.0.0:5557
+
+    staticClients:
+      - id: spring-dex-test
+        redirectURIs:
+          - 'https://spring-dex-test.apps.barp.opencontainer.io/login/oauth2/code/dex'
+        name: 'Spring Dex Test'
+        secret: test-value
+
+    connectors:
+      - type: openshift
+        id: openshift
+        name: OpenShift
+        config:
+          issuer: https://kubernetes.default.svc
+          clientID: dex-test
+          clientSecret: test-value
+          redirectURI: https://dex-test.apps.barp.opencontainer.io/dex/callback
+          insecureCA: true
+          groups: []
+          userIDKey: username
+          #claimMapping:
+          #  userNameKey: username
+          #  preferredUsernameKey: preferred_username
+          #  emailKey: email

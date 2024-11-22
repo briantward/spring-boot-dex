@@ -1,0 +1,21 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    build: spring-dex-test
+  name: spring-dex-test
+  namespace: test
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: spring-dex-test:latest
+  source:
+    binary: {}
+    type: Binary
+  strategy:
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: openjdk-21:latest
+    type: Source

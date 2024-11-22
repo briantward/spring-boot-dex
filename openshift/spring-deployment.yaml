@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: spring-dex-test
+    app.kubernetes.io/component: spring-dex-test
+    app.kubernetes.io/instance: spring-dex-test
+  name: spring-dex-test
+  namespace: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: spring-dex-test
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        deployment: spring-dex-test
+    spec:
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/test/spring-dex-test@sha256:8525a89dcdf2964d041785ce0932e4ef4326e0243946acb3cc9a7e7e34899eb0
+        imagePullPolicy: IfNotPresent
+        name: spring-dex-test
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8443
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
