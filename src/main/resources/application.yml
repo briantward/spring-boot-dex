@@ -1,0 +1,21 @@
+logging:
+  level:
+    root: INFO
+    org:
+      springframework: TRACE
+    com:
+      example: TRACE
+spring:
+  config:
+    import: "kubernetes:"
+  application:
+    name: spring-dex
+  cloud:
+    kubernetes:
+      config:
+        enabled: true
+        enableApi: true
+        name: spring-dex
+        namespace: test
+        sources:
+          - name: spring-dex

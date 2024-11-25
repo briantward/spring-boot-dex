@@ -1,0 +1,36 @@
+apiVersion: v1
+data:
+  spring-dex.yml: |-
+    logging:
+      level:
+        root: INFO
+        org:
+          springframework: TRACE
+        com:
+          example: TRACE
+    spring:
+      mvc:
+        log-request-details: true
+      security:
+        oauth2:
+          client:
+            registration:
+              dex:
+                provider: dex
+                client-id: spring-dex-test
+                client-secret: test-value
+                authorization-grant-type: authorization_code
+                scope: "openid,profile,groups"
+                redirect-uri: https://spring-dex-test.apps.barp.opencontainer.io/login/oauth2/code/dex
+
+            provider:
+              dex:
+                authorization-uri: https://dex-test.apps.barp.opencontainer.io/dex/auth
+                token-uri: https://dex-test.apps.barp.opencontainer.io/dex/token
+                jwk-set-uri: https://dex-test.apps.barp.opencontainer.io/dex/keys
+                user-info-uri: https://dex-test.apps.barp.opencontainer.io/dex/userinfo
+                user-name-attribute: name
+kind: ConfigMap
+metadata:
+  name: spring-dex
+  namespace: test
