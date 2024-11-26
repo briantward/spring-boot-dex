@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: spring-dex-sidecar
+    app.kubernetes.io/component: spring-dex-sidecar
+    app.kubernetes.io/instance: spring-dex-sidecar
+  name: spring-dex-sidecar
+  namespace: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: spring-dex-sidecar
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        deployment: spring-dex-sidecar
+    spec:
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/test/spring-dex-sidecar@sha256:8525a89dcdf2964d041785ce0932e4ef4326e0243946acb3cc9a7e7e34899eb0
+        imagePullPolicy: IfNotPresent
+        name: spring-dex-sidecar
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8443
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      - command: ["/usr/local/bin/dex","serve","/dex-config/dex-config.yaml"]
+        image: registry.redhat.io/openshift-gitops-1/dex-rhel8@sha256:9116e1adc24db19136ea34b8faeba3b1003228621d81b716cbe4ec4d61ad6ffd
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz/live
+            port: 5558
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: dex
+        ports:
+        - containerPort: 5556
+          name: http
+          protocol: TCP
+        - containerPort: 5557
+          name: grpc
+          protocol: TCP
+        - containerPort: 5558
+          name: metrics
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+          requests:
+            cpu: 250m
+            memory: 128Mi
+        volumeMounts:
+        - mountPath: /dex-config
+          name: dex-config
+      serviceAccount: dex-server
+      serviceAccountName: dex-server
+      schedulerName: default-scheduler
+      volumes:
+      - name: dex-config
+        configMap:
+          defaultMode: 420
+          name: dex-config
