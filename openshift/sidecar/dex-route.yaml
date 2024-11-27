@@ -1,0 +1,22 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: spring-dex-test
+    app.kubernetes.io/component: spring-dex-test
+    app.kubernetes.io/instance: spring-dex-test
+  name: dex
+  namespace: test
+spec:
+  host: spring-dex-test.apps.barp.opencontainer.io
+  path: /dex
+  port:
+    targetPort: port-1
+  tls:
+    insecureEdgeTerminationPolicy: None
+    termination: edge
+  to:
+    kind: Service
+    name: dex
+    weight: 100
+  wildcardPolicy: None

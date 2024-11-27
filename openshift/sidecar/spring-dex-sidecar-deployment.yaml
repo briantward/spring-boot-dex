@@ -23,7 +23,7 @@ spec:
         deployment: spring-dex-sidecar
     spec:
       containers:
-      - image: image-registry.openshift-image-registry.svc:5000/test/spring-dex-sidecar@sha256:8525a89dcdf2964d041785ce0932e4ef4326e0243946acb3cc9a7e7e34899eb0
+      - image: image-registry.openshift-image-registry.svc:5000/test/spring-dex@sha256:389a81908bf984edb275fb71d2f76f9c61d3e16ac252b64a94bedcc165dcf139
         imagePullPolicy: IfNotPresent
         name: spring-dex-sidecar
         ports:
@@ -67,8 +67,6 @@ spec:
         volumeMounts:
         - mountPath: /dex-config
           name: dex-config
-      serviceAccount: dex-server
-      serviceAccountName: dex-server
       schedulerName: default-scheduler
       volumes:
       - name: dex-config

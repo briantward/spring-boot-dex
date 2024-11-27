@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: spring-dex-sidecar
+    app.kubernetes.io/component: spring-dex-sidecar
+    app.kubernetes.io/instance: spring-dex-sidecar
+  name: spring-dex
+  namespace: test
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: 8443-tcp
+    port: 8443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    deployment: spring-dex-sidecar
+  type: ClusterIP

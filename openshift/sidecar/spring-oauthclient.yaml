@@ -1,0 +1,9 @@
+apiVersion: oauth.openshift.io/v1
+grantMethod: prompt
+kind: OAuthClient
+metadata:
+  name: spring-dex-test
+redirectURIs:
+- http://spring-dex-test.apps.barp.opencontainer.io/app/login/oauth2/code/dex
+- http://spring-dex-test.apps.barp.opencontainer.io/
+secret: test-value
